@@ -105,7 +105,7 @@ def test_read_as_of_LondonTime():
     versions = vs._versions.with_options.return_value
     versions.find_one.assert_called_once_with({'symbol':'symbol', '_id':
                                               {'$lt': bson.ObjectId.from_datetime(dt(2013, 4, 1, 9, 0, tzinfo=mktz()) + dtd(seconds=1))}},
-                                             sort=[('_id', pymongo.DESCENDING)])
+                                             sort=[('symbol', pymongo.DESCENDING), ('version', pymongo.DESCENDING)])
 
 
 def test_read_as_of_NotNaive():
@@ -116,7 +116,7 @@ def test_read_as_of_NotNaive():
     versions = vs._versions.with_options.return_value
     versions.find_one.assert_called_once_with({'symbol':'symbol', '_id':
                                               {'$lt': bson.ObjectId.from_datetime(dt(2013, 4, 1, 9, 0, tzinfo=mktz('Europe/Paris')) + dtd(seconds=1))}},
-                                             sort=[('_id', pymongo.DESCENDING)])
+                                             sort=[('symbol', pymongo.DESCENDING), ('version', pymongo.DESCENDING)])
 
 
 def test_read_metadata_no_asof():
