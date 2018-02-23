@@ -238,6 +238,22 @@ def test_snapshot():
                                                 call('foo', as_of=None, read_preference=ReadPreference.PRIMARY)])
 
 
+def test_list_symbols_default_pipeline():
+    versions = Mock()
+    vs = create_autospec(VersionStore, _versions=versions)
+    versions.aggregate.return_value = []
+
+    VersionStore.list_symbols(vs)
+
+    pipeline = [
+        {'$sort': bson.SON([('symbol', pymongo.DESCENDING), ('version', pymongo.DESCENDING)])},
+        {'$group': {'_id': '$symbol', 'deleted': {'$first': '$metadata.deleted'}}},
+        {'$match': {'deleted': {'$ne': True}}},
+        {'$project': {'_id': 0, 'symbol': '$_id'}}
+    ]
+    versions.aggregate.assert_called_once_with(pipeline)
+
+
 def test_snapshot_duplicate_raises_exception():
     vs = create_autospec(VersionStore, _snapshots=Mock())
     with pytest.raises(DuplicateSnapshotException) as e:

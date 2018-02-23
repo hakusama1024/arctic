@@ -149,7 +149,7 @@ class VersionStore(object):
             pipeline.append({'$match': query})
         pipeline.extend([
                         # Id is by insert time which matches version order
-                        {'$sort': {'_id':-1}},
+                        {'$sort': bson.SON([('symbol', pymongo.DESCENDING), ('version', pymongo.DESCENDING)])},
                         # Group by 'symbol'
                         {'$group': {'_id': '$symbol',
                                     'deleted': {'$first': '$metadata.deleted'},
