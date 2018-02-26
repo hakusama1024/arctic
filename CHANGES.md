@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.61
+  * Bugfix: #508 VersionStore: list_symbol and read now always returns latest version
+
 ### 1.60
   * Bugfix: #503 ChunkStore: speedup check for -1 segments
   * Feature: #504 Increasing number of libraries in Arctic to 5000.
